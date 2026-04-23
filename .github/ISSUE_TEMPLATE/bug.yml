@@ -1,6 +1,6 @@
 ﻿name: I found a bug!
 description: Report a bug in Sable
-title: "My game crashed!"
+title: " "
 labels:
   - type: bug
 body:
