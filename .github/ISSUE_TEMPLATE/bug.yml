@@ -1,5 +1,5 @@
 ﻿name: I found a bug!
-description: Report a bug in Sable
+description: Report a bug in mod
 labels:
   - type: bug
 body:
@@ -23,4 +23,4 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for taking the time to make a report and help improve Sable!
+        Thank you for taking the time to make a report and help improve the mod!
