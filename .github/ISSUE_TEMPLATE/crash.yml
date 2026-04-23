@@ -1,5 +1,5 @@
 ﻿name: My game crashed!
-description: Report a crash in Sable
+description: Report a crash in Create Propulsion: Simulated
 title: ""
 labels:
   - type: crash
@@ -24,6 +24,4 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for taking the time to make a report and help improve Sable!
-
         Remember, contributions to this repository should follow its contributing guidelines.
