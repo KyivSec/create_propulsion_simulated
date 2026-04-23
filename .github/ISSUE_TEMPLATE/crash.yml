@@ -1,6 +1,5 @@
 ﻿name: My game crashed!
 description: Report a crash in Create Propulsion Simulated
-title: "My game crashed!"
 labels:
   - type: crash
 body:
