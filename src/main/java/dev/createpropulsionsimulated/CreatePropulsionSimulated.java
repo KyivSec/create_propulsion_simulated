@@ -8,6 +8,7 @@ import dev.createpropulsionsimulated.registry.CPSCreativeTabs;
 import dev.createpropulsionsimulated.registry.CPSFluids;
 import dev.createpropulsionsimulated.registry.CPSItems;
 import dev.createpropulsionsimulated.registry.CPSParticleTypes;
+import dev.createpropulsionsimulated.registry.CPSSounds;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -28,6 +29,7 @@ public final class CreatePropulsionSimulated {
         CPSBlockEntities.REGISTER.register(modBus);
         CPSCreativeTabs.REGISTER.register(modBus);
         CPSParticleTypes.REGISTER.register(modBus);
+        CPSSounds.REGISTER.register(modBus);
 
         modBus.addListener(this::onRegisterCapabilities);
         modContainer.registerConfig(ModConfig.Type.SERVER, ThrusterConfig.SPEC);

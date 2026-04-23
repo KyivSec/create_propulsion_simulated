@@ -3,6 +3,7 @@ package dev.createpropulsionsimulated.content.wing;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.decoration.copycat.CopycatBlock;
 import com.simibubi.create.content.decoration.copycat.CopycatBlockEntity;
+import dev.ryanhcode.sable.api.block.BlockSubLevelLiftProvider;
 import dev.createpropulsionsimulated.content.thruster.ThrusterShapes;
 import dev.createpropulsionsimulated.registry.CPSBlockEntities;
 import dev.createpropulsionsimulated.registry.CPSBlocks;
@@ -33,12 +34,13 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class CopycatWingBlock extends CopycatBlock {
+public class CopycatWingBlock extends CopycatBlock implements BlockSubLevelLiftProvider {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     private static final List<Supplier<? extends Block>> PLACEMENT_BLOCKS = List.of(
             CPSBlocks.COPYCAT_WING,
@@ -100,6 +102,7 @@ public class CopycatWingBlock extends CopycatBlock {
                 return ItemInteractionResult.SUCCESS;
             }
         }
+
         return super.useItemOn(heldItem, state, world, pos, player, hand, ray);
     }
 
@@ -188,6 +191,21 @@ public class CopycatWingBlock extends CopycatBlock {
     @Override
     public BlockEntityType<? extends CopycatBlockEntity> getBlockEntityType() {
         return CPSBlockEntities.COPYCAT_WING.get();
+    }
+
+    @Override
+    public float sable$getLiftScalar() {
+        return 0.0f;
+    }
+
+    @Override
+    public float sable$getParallelDragScalar() {
+        return 1.75f;
+    }
+
+    @Override
+    public @NotNull Direction sable$getNormal(final BlockState blockState) {
+        return blockState.getValue(FACING);
     }
 
     private static VoxelShaper wingShape(final int width) {

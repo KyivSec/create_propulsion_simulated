@@ -19,6 +19,9 @@ public final class CPSItems {
     public static final DeferredItem<BlockItem> CREATIVE_THRUSTER = REGISTER.register("creative_thruster",
             () -> new BlockItem(CPSBlocks.CREATIVE_THRUSTER.get(), new Item.Properties()));
 
+    public static final DeferredItem<BlockItem> ION_THRUSTER = REGISTER.register("ion_thruster",
+            () -> new BlockItem(CPSBlocks.ION_THRUSTER.get(), new Item.Properties()));
+
     public static final DeferredItem<BlockItem> COPYCAT_WING = REGISTER.register("copycat_wing",
             () -> new CopycatWingItem(CPSBlocks.COPYCAT_WING.get(), new Item.Properties()));
 

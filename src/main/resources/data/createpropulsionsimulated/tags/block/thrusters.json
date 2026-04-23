@@ -2,7 +2,8 @@
   "replace": false,
   "values": [
     "createpropulsionsimulated:thruster",
-    "createpropulsionsimulated:creative_thruster"
+    "createpropulsionsimulated:creative_thruster",
+    "createpropulsionsimulated:ion_thruster"
   ]
 }
 

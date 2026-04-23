@@ -20,6 +20,7 @@ public final class CPSCreativeTabs {
                     .displayItems((parameters, output) -> {
                         output.accept(CPSItems.THRUSTER.get());
                         output.accept(CPSItems.CREATIVE_THRUSTER.get());
+                        output.accept(CPSItems.ION_THRUSTER.get());
                         output.accept(CPSItems.COPYCAT_WING.get());
                         output.accept(CPSItems.PINE_RESIN.get());
                         output.accept(CPSItems.TURPENTINE_BUCKET.get());

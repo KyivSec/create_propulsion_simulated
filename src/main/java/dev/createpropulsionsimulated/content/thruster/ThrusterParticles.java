@@ -22,17 +22,23 @@ public final class ThrusterParticles {
 
         final Direction exhaust = blockEntity.getFacing().getOpposite();
         final double nozzleOffset = blockEntity.getNozzleOffsetFromCenter();
+        final int stepX = exhaust.getStepX();
+        final int stepY = exhaust.getStepY();
+        final int stepZ = exhaust.getStepZ();
+        final double baseX = blockEntity.getBlockPos().getX() + 0.5d;
+        final double baseY = blockEntity.getBlockPos().getY() + 0.5d;
+        final double baseZ = blockEntity.getBlockPos().getZ() + 0.5d;
         final Vector3d localNozzle = new Vector3d(
-                blockEntity.getBlockPos().getX() + 0.5d,
-                blockEntity.getBlockPos().getY() + 0.5d,
-                blockEntity.getBlockPos().getZ() + 0.5d
-        ).fma(nozzleOffset, new Vector3d(exhaust.getStepX(), exhaust.getStepY(), exhaust.getStepZ()));
+                baseX + stepX * nozzleOffset,
+                baseY + stepY * nozzleOffset,
+                baseZ + stepZ * nozzleOffset
+        );
 
         final SimulatedThrustAdapter.Projection projection = SimulatedThrustAdapter.projectToWorld(
                 blockEntity.getLevel(),
                 blockEntity.getBlockPos(),
                 localNozzle,
-                new Vector3d(exhaust.getStepX(), exhaust.getStepY(), exhaust.getStepZ())
+                new Vector3d(stepX, stepY, stepZ)
         );
 
         final Level level = projection.level();
@@ -51,9 +57,11 @@ public final class ThrusterParticles {
             final double vx = dir.x * speed;
             final double vy = dir.y * speed;
             final double vz = dir.z * speed;
-            final var particle = blockEntity.isCreative() && blockEntity.getPlumeType() == ThrusterBlockEntity.PlumeType.PLASMA
+            final var particle = blockEntity.isIon()
+                    ? CPSParticleTypes.ION.get()
+                    : ((blockEntity.isCreative() && blockEntity.getPlumeType() == ThrusterBlockEntity.PlumeType.PLASMA)
                     ? CPSParticleTypes.PLASMA.get()
-                    : CPSParticleTypes.PLUME.get();
+                    : CPSParticleTypes.PLUME.get());
 
             if (level instanceof final ClientLevel clientLevel) {
                 clientLevel.addParticle(particle,

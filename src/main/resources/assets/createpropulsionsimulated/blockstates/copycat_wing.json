@@ -1,10 +1,7 @@
 {
   "variants": {
-    "facing=up": { "model": "createpropulsionsimulated:block/copycat_wing" },
-    "facing=down": { "model": "createpropulsionsimulated:block/copycat_wing", "x": 180 },
-    "facing=north": { "model": "createpropulsionsimulated:block/copycat_wing", "x": 90 },
-    "facing=south": { "model": "createpropulsionsimulated:block/copycat_wing", "x": 270 },
-    "facing=east": { "model": "createpropulsionsimulated:block/copycat_wing", "x": 90, "y": 90 },
-    "facing=west": { "model": "createpropulsionsimulated:block/copycat_wing", "x": 90, "y": 270 }
+    "": {
+      "model": "minecraft:block/air"
+    }
   }
 }

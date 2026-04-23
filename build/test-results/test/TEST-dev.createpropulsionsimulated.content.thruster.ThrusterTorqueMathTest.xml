@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-04-23T13:21:46.228Z" hostname="DESKTOP-7D6HKM6" time="0.043">
+<testsuite name="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-04-23T22:21:57.822Z" hostname="DESKTOP-7D6HKM6" time="0.048">
   <properties/>
   <testcase name="centeredThrusterProducesNoTorque()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.024"/>
   <testcase name="symmetricMultipleThrustersCancelTorqueAndSumForce()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.001"/>

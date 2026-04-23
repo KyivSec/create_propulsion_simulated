@@ -12,10 +12,18 @@ public final class ThrusterConfig {
     public static final ModConfigSpec.IntValue THRUSTER_MAX_SPEED;
     public static final ModConfigSpec.IntValue CREATIVE_THRUSTER_MAX_SPEED;
     public static final ModConfigSpec.DoubleValue FUEL_MB_PER_TICK_AT_FULL_THROTTLE;
+    public static final ModConfigSpec.IntValue ION_THRUSTER_ENERGY_CAPACITY_FE;
+    public static final ModConfigSpec.DoubleValue ION_THRUSTER_FE_PER_TICK_AT_FULL_THROTTLE;
+    public static final ModConfigSpec.DoubleValue ION_THRUSTER_BASE_THRUST;
     public static final ModConfigSpec.BooleanValue DAMAGE_ENTITIES;
     public static final ModConfigSpec.IntValue DAMAGE_TICK_INTERVAL;
     public static final ModConfigSpec.DoubleValue NOZZLE_OFFSET_FROM_CENTER;
     public static final ModConfigSpec.IntValue CLIENT_PARTICLES_PER_TICK;
+    public static final ModConfigSpec.DoubleValue GROUND_FRICTION_COEFFICIENT;
+    public static final ModConfigSpec.DoubleValue GROUND_LINEAR_DRAG;
+    public static final ModConfigSpec.DoubleValue GROUND_ROLLING_RESISTANCE;
+    public static final ModConfigSpec.DoubleValue GROUNDED_SPEED_DEADZONE;
+    public static final ModConfigSpec.DoubleValue GROUND_PROBE_DISTANCE;
 
     static {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -35,6 +43,12 @@ public final class ThrusterConfig {
                 .defineInRange("creativeThrusterMaxSpeed", 600, 1, 1000);
         FUEL_MB_PER_TICK_AT_FULL_THROTTLE = builder.comment("Fuel consumption in millibuckets per tick at full redstone throttle.")
                 .defineInRange("fuelMbPerTickAtFullThrottle", 1.0d, 0.0001d, 1000.0d);
+        ION_THRUSTER_ENERGY_CAPACITY_FE = builder.comment("Ion thruster internal FE capacity.")
+                .defineInRange("ionThrusterEnergyCapacityFe", 1000, 1, 100000000);
+        ION_THRUSTER_FE_PER_TICK_AT_FULL_THROTTLE = builder.comment("Ion thruster energy consumption in FE per tick at full redstone throttle.")
+                .defineInRange("ionThrusterFePerTickAtFullThrottle", 80.0d, 0.0001d, 1000000.0d);
+        ION_THRUSTER_BASE_THRUST = builder.comment("Ion thruster base thrust at redstone 15 and full obstruction efficiency.")
+                .defineInRange("ionThrusterBaseThrust", 600.0d, 1.0d, 10000000.0d);
         DAMAGE_ENTITIES = builder.comment("If true, entities inside active thruster plume are damaged.")
                 .define("damageEntities", true);
         DAMAGE_TICK_INTERVAL = builder.comment("How often plume damage checks run, in ticks.")
@@ -43,6 +57,16 @@ public final class ThrusterConfig {
                 .defineInRange("nozzleOffsetFromCenter", 0.45d, 0.0d, 1.5d);
         CLIENT_PARTICLES_PER_TICK = builder.comment("Max client particles per tick while active.")
                 .defineInRange("clientParticlesPerTick", 4, 0, 64);
+        GROUND_FRICTION_COEFFICIENT = builder.comment("Ground friction coefficient applied while a thruster detects support under it.")
+                .defineInRange("groundFrictionCoefficient", 0.08d, 0.0d, 5.0d);
+        GROUND_LINEAR_DRAG = builder.comment("Grounded linear drag coefficient in pN per m/s.")
+                .defineInRange("groundLinearDrag", 180.0d, 0.0d, 10_000.0d);
+        GROUND_ROLLING_RESISTANCE = builder.comment("Additional grounded rolling resistance in pN.")
+                .defineInRange("groundRollingResistance", 80.0d, 0.0d, 10_000.0d);
+        GROUNDED_SPEED_DEADZONE = builder.comment("Horizontal speed below this value is treated as stopped for grounded drag.")
+                .defineInRange("groundedSpeedDeadzone", 0.03d, 0.0d, 5.0d);
+        GROUND_PROBE_DISTANCE = builder.comment("How far downward a thruster probes to detect grounded support.")
+                .defineInRange("groundProbeDistance", 1.5d, 0.05d, 5.0d);
         builder.pop();
 
         SPEC = builder.build();

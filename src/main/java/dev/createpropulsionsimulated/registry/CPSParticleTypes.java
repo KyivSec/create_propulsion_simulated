@@ -14,6 +14,8 @@ public final class CPSParticleTypes {
             () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> PLASMA = REGISTER.register("plasma",
             () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ION = REGISTER.register("ion",
+            () -> new SimpleParticleType(false));
 
     private CPSParticleTypes() {
     }

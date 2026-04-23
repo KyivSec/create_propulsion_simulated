@@ -2,6 +2,7 @@ package dev.createpropulsionsimulated.registry;
 
 import dev.createpropulsionsimulated.CreatePropulsionSimulated;
 import dev.createpropulsionsimulated.content.thruster.CreativeThrusterBlock;
+import dev.createpropulsionsimulated.content.thruster.IonThrusterBlock;
 import dev.createpropulsionsimulated.content.thruster.ThrusterBlock;
 import dev.createpropulsionsimulated.content.wing.CopycatWingBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -21,6 +22,13 @@ public final class CPSBlocks {
 
     public static final DeferredBlock<CreativeThrusterBlock> CREATIVE_THRUSTER = REGISTER.register("creative_thruster",
             () -> new CreativeThrusterBlock(BlockBehaviour.Properties.of()
+                    .strength(3.5f, 6.0f)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .noOcclusion()
+                    .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<IonThrusterBlock> ION_THRUSTER = REGISTER.register("ion_thruster",
+            () -> new IonThrusterBlock(BlockBehaviour.Properties.of()
                     .strength(3.5f, 6.0f)
                     .sound(SoundType.NETHERITE_BLOCK)
                     .noOcclusion()

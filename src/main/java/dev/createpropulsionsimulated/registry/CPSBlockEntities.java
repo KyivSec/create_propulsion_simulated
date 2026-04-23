@@ -2,6 +2,7 @@ package dev.createpropulsionsimulated.registry;
 
 import dev.createpropulsionsimulated.CreatePropulsionSimulated;
 import dev.createpropulsionsimulated.content.thruster.CreativeThrusterBlockEntity;
+import dev.createpropulsionsimulated.content.thruster.IonThrusterBlockEntity;
 import dev.createpropulsionsimulated.content.thruster.ThrusterBlockEntity;
 import dev.createpropulsionsimulated.content.wing.CopycatWingBlockEntity;
 import net.minecraft.core.registries.Registries;
@@ -17,6 +18,9 @@ public final class CPSBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativeThrusterBlockEntity>> CREATIVE_THRUSTER = REGISTER.register("creative_thruster",
             () -> BlockEntityType.Builder.of(CreativeThrusterBlockEntity::new, CPSBlocks.CREATIVE_THRUSTER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IonThrusterBlockEntity>> ION_THRUSTER = REGISTER.register("ion_thruster",
+            () -> BlockEntityType.Builder.of(IonThrusterBlockEntity::new, CPSBlocks.ION_THRUSTER.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CopycatWingBlockEntity>> COPYCAT_WING = REGISTER.register("copycat_wing",
             () -> BlockEntityType.Builder.of(CopycatWingBlockEntity::new,

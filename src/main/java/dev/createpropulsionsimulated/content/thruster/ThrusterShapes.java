@@ -23,6 +23,14 @@ public final class ThrusterShapes {
             .add(Block.box(4, 4, 10, 12, 12, 12))
             .forDirectional();
 
+    public static final VoxelShaper ION_THRUSTER = ShapeBuilder.shape()
+            .add(Block.box(0, 0, 0, 16, 8, 16))
+            .add(Block.box(0, 8, 5, 16, 12, 11))
+            .add(Block.box(5, 8, 0, 11, 12, 16))
+            .add(Block.box(3, 8, 3, 13, 14, 13))
+            .add(Block.box(2, 14, 2, 14, 16, 14))
+            .forDirectional(Direction.UP);
+
     private ThrusterShapes() {
     }
 

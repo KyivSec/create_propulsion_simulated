@@ -13,6 +13,8 @@ import dev.createpropulsionsimulated.registry.CPSItems;
 import dev.createpropulsionsimulated.utility.GoggleUtils;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
+import dev.ryanhcode.sable.api.physics.force.ForceGroups;
+import dev.ryanhcode.sable.api.physics.force.QueuedForceGroup;
 import dev.ryanhcode.sable.api.physics.handle.RigidBodyHandle;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysicsData;
@@ -53,6 +55,7 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
     protected static final float LOWEST_POWER_THRESHOLD = 5.0f / 15.0f;
     protected static final double STANDARD_MAX_THRUST_PN = 600.0d;
     protected static final double CREATIVE_MAX_THRUST_PN = 1000.0d;
+    private static final double EARTH_GRAVITY = 9.81d;
 
     protected SmartFluidTankBehaviour tank;
     protected int unobstructedBlocks;
@@ -103,38 +106,25 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
         }
 
         if (this.level.isClientSide()) {
+            ThrusterSoundHooks.clientTick(this);
             ThrusterParticles.spawn(this);
             return;
         }
-        final boolean usesTank = this.usesFuelTank();
-        if (usesTank && this.tank == null) {
+        if (this.usesFuelTank() && this.tank == null) {
             return;
         }
 
         this.tickCounter++;
-        final int scanLength = ThrusterConfig.OBSTRUCTION_SCAN_LENGTH.get();
-        if (this.tickCounter == 1 || this.tickCounter % 10 == 0) {
-            this.recalculateObstruction(scanLength);
-        }
-
+        final double previousThrust = this.currentThrust;
+        final boolean previouslyActive = previousThrust > 0.0d;
         final double throttle = this.getThrottle();
         final boolean powered = throttle > 0.0d;
-        final boolean requireFuel = ThrusterConfig.REQUIRE_FUEL.get();
-        if (powered && requireFuel && usesTank) {
-            this.fluidDrainAccumulator += throttle * ThrusterConfig.FUEL_MB_PER_TICK_AT_FULL_THROTTLE.get();
-            while (this.fluidDrainAccumulator >= 1.0d) {
-                final FluidStack drained = this.tank.getPrimaryHandler().drain(1, IFluidHandler.FluidAction.EXECUTE);
-                if (drained.isEmpty()) {
-                    break;
-                }
-                this.fluidDrainAccumulator -= 1.0d;
-            }
-        } else if (!powered) {
-            this.fluidDrainAccumulator = 0.0d;
+        final int scanLength = ThrusterConfig.OBSTRUCTION_SCAN_LENGTH.get();
+        if (powered || this.tickCounter == 1 || this.tickCounter % 10 == 0) {
+            this.recalculateObstruction(scanLength);
         }
-
-        final boolean hasFuel = !usesTank || !this.tank.getPrimaryHandler().isEmpty();
-        final boolean canProduce = ThrusterState.canProduceThrust(powered, hasFuel, requireFuel && usesTank);
+        final boolean hasResource = this.tickResourceAndGetAvailability(powered, throttle);
+        final boolean canProduce = ThrusterState.canProduceThrust(powered, hasResource, this.requiresResourceForThrust());
         if (canProduce) {
             final double efficiency = ThrusterState.obstructionEfficiency(this.unobstructedBlocks);
             this.currentThrust = Math.min(ThrusterState.thrust(this.getBaseThrust(), throttle, efficiency), this.getRawThrustCap());
@@ -151,7 +141,9 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
             }
         }
 
-        if (this.tickCounter % 10 == 0) {
+        final boolean activeChanged = (this.currentThrust > 0.0d) != previouslyActive;
+        final boolean thrustChangedNoticeably = Math.abs(this.currentThrust - previousThrust) >= 1.0d;
+        if (activeChanged || (thrustChangedNoticeably && this.tickCounter % 4 == 0) || this.tickCounter % 10 == 0) {
             this.sync();
         }
 
@@ -183,6 +175,12 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
             return;
         }
         SimulatedThrustAdapter.applyImpulseAtPoint(subLevel, sample.pointLocal(), limitedImpulse);
+
+        final Vector3d groundFrictionImpulse = this.computeGroundFrictionImpulse(subLevel, handle, timeStep);
+        if (groundFrictionImpulse.lengthSquared() > 1.0e-7d) {
+            final QueuedForceGroup dragGroup = subLevel.getOrCreateQueuedForceGroup(ForceGroups.DRAG.get());
+            dragGroup.getForceTotal().applyLinearImpulse(groundFrictionImpulse);
+        }
     }
 
     public Direction getFacing() {
@@ -217,8 +215,24 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
         return this.tank == null ? 0 : this.tank.getPrimaryHandler().getFluidAmount();
     }
 
+    public int getFuelCapacityMb() {
+        return ThrusterConfig.FUEL_TANK_CAPACITY_MB.get();
+    }
+
     public int getUnobstructedBlocks() {
         return this.unobstructedBlocks;
+    }
+
+    public int getObstructionLength() {
+        return OBSTRUCTION_LENGTH;
+    }
+
+    public double getDisplayedThrustPnForTooltip() {
+        return this.getDisplayedThrustPn();
+    }
+
+    public double getDisplayedAirflowMsForTooltip() {
+        return this.getDisplayedAirflowMs();
     }
 
     public double getNozzleOffsetFromCenter() {
@@ -299,11 +313,55 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
     }
 
     protected boolean shouldEmitParticles() {
-        return this.isActive();
+        return this.isVisuallyActive();
+    }
+
+    public boolean isVisuallyActive() {
+        if (this.getThrottle() <= 0.0d) {
+            return false;
+        }
+        if (this.isCreative()) {
+            return true;
+        }
+        if (!this.usesFuelTank()) {
+            return true;
+        }
+        return this.getFuelAmountMb() > 0;
     }
 
     protected boolean usesFuelTank() {
         return true;
+    }
+
+    protected boolean requiresResourceForThrust() {
+        return ThrusterConfig.REQUIRE_FUEL.get() && this.usesFuelTank();
+    }
+
+    protected boolean tickResourceAndGetAvailability(final boolean powered, final double throttle) {
+        final boolean usesTank = this.usesFuelTank();
+        final boolean requireFuel = ThrusterConfig.REQUIRE_FUEL.get();
+        if (usesTank && this.tank == null) {
+            return false;
+        }
+
+        if (powered && requireFuel && usesTank) {
+            this.fluidDrainAccumulator += throttle * ThrusterConfig.FUEL_MB_PER_TICK_AT_FULL_THROTTLE.get();
+            while (this.fluidDrainAccumulator >= 1.0d) {
+                final FluidStack drained = this.tank.getPrimaryHandler().drain(1, IFluidHandler.FluidAction.EXECUTE);
+                if (drained.isEmpty()) {
+                    break;
+                }
+                this.fluidDrainAccumulator -= 1.0d;
+            }
+        } else if (!powered) {
+            this.fluidDrainAccumulator = 0.0d;
+        }
+
+        return !usesTank || !this.tank.getPrimaryHandler().isEmpty();
+    }
+
+    public boolean isIon() {
+        return false;
     }
 
     public void cyclePlumeType() {
@@ -636,6 +694,75 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
             return new Vector3d();
         }
         return new Vector3d(impulseLocal).mul(scale);
+    }
+
+    private Vector3d computeGroundFrictionImpulse(final ServerSubLevel subLevel,
+                                                  final RigidBodyHandle handle,
+                                                  final double timeStep) {
+        if (!this.isGrounded(subLevel) || timeStep <= 1.0e-7d) {
+            return new Vector3d();
+        }
+
+        final Vector3d worldVelocity = handle.getLinearVelocity(new Vector3d());
+        if (!Double.isFinite(worldVelocity.x) || !Double.isFinite(worldVelocity.y) || !Double.isFinite(worldVelocity.z)) {
+            return new Vector3d();
+        }
+
+        final Vector3d horizontalVelocity = new Vector3d(worldVelocity.x, 0.0d, worldVelocity.z);
+        final double speed = horizontalVelocity.length();
+        if (!Double.isFinite(speed) || speed <= ThrusterConfig.GROUNDED_SPEED_DEADZONE.get()) {
+            return new Vector3d();
+        }
+
+        final double mass = subLevel.getMassTracker().getMass();
+        if (!Double.isFinite(mass) || mass <= 1.0e-7d) {
+            return new Vector3d();
+        }
+
+        final double frictionCoefficient = Math.max(ThrusterConfig.GROUND_FRICTION_COEFFICIENT.get(), 0.08d);
+        final double linearDrag = Math.max(ThrusterConfig.GROUND_LINEAR_DRAG.get(), 180.0d);
+        final double rollingResistance = Math.max(ThrusterConfig.GROUND_ROLLING_RESISTANCE.get(), 80.0d);
+
+        final double maxGroundFriction = frictionCoefficient * mass * EARTH_GRAVITY;
+        final double dynamicResistance = linearDrag * speed + rollingResistance;
+        double forceMagnitude = Math.min(maxGroundFriction, dynamicResistance);
+        if (!Double.isFinite(forceMagnitude) || forceMagnitude <= 0.0d) {
+            return new Vector3d();
+        }
+
+        final double maxStoppingImpulse = mass * speed;
+        final double requestedImpulse = forceMagnitude * timeStep;
+        if (requestedImpulse > maxStoppingImpulse) {
+            forceMagnitude = maxStoppingImpulse / timeStep;
+        }
+
+        final Vector3d worldFrictionDirection = horizontalVelocity.normalize(new Vector3d()).negate();
+        final Vector3d worldFrictionImpulse = worldFrictionDirection.mul(forceMagnitude * timeStep);
+        if (!Double.isFinite(worldFrictionImpulse.x) || !Double.isFinite(worldFrictionImpulse.y) || !Double.isFinite(worldFrictionImpulse.z)) {
+            return new Vector3d();
+        }
+
+        return subLevel.logicalPose().transformNormalInverse(worldFrictionImpulse);
+    }
+
+    private boolean isGrounded(final ServerSubLevel subLevel) {
+        final Level globalLevel = subLevel.getLevel();
+        if (globalLevel == null) {
+            return false;
+        }
+
+        final Vector3d worldCenter = subLevel.logicalPose().transformPosition(JOMLConversion.atCenterOf(this.worldPosition), new Vector3d());
+        final double probeDistance = ThrusterConfig.GROUND_PROBE_DISTANCE.get();
+        final Vec3 probeStart = new Vec3(worldCenter.x, worldCenter.y - 0.55d, worldCenter.z);
+        final Vec3 probeEnd = probeStart.add(0.0d, -probeDistance, 0.0d);
+        final BlockHitResult hit = globalLevel.clip(new ClipContext(
+                probeStart,
+                probeEnd,
+                ClipContext.Block.COLLIDER,
+                ClipContext.Fluid.NONE,
+                (Entity) null
+        ));
+        return hit.getType() == BlockHitResult.Type.BLOCK;
     }
 
     private void emitDebugForceVector(final Level level) {
