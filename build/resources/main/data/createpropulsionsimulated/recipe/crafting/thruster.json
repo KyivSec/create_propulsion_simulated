@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "SMS",
+    " C "
+  ],
+  "key": {
+    "S": {
+      "item": "create:iron_sheet"
+    },
+    "P": {
+      "item": "create:fluid_pipe"
+    },
+    "M": {
+      "item": "create:precision_mechanism"
+    },
+    "C": {
+      "item": "create:chute"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "createpropulsionsimulated:thruster"
+  }
+}

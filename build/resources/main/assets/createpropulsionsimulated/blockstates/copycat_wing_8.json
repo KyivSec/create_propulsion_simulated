@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=up": { "model": "createpropulsionsimulated:block/copycat_wing_8" },
+    "facing=down": { "model": "createpropulsionsimulated:block/copycat_wing_8", "x": 180 },
+    "facing=north": { "model": "createpropulsionsimulated:block/copycat_wing_8", "x": 90 },
+    "facing=south": { "model": "createpropulsionsimulated:block/copycat_wing_8", "x": 270 },
+    "facing=east": { "model": "createpropulsionsimulated:block/copycat_wing_8", "x": 90, "y": 90 },
+    "facing=west": { "model": "createpropulsionsimulated:block/copycat_wing_8", "x": 90, "y": 270 }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "tag": "createpropulsionsimulated:spruce_logs"
+    }
+  ],
+  "processing_time": 150,
+  "results": [
+    {
+      "id": "createpropulsionsimulated:pine_resin"
+    }
+  ]
+}

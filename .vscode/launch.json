@@ -1,0 +1,49 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - create-propulsion-simulated",
+        "order": 0
+      },
+      "projectName": "create-propulsion-simulated",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatepropulsionsimulated%%C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - create-propulsion-simulated",
+        "order": 1
+      },
+      "projectName": "create-propulsion-simulated",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatepropulsionsimulated%%C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

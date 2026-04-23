@@ -1,0 +1,18 @@
+{
+  "type": "create:spouting",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "createpropulsionsimulated:turpentine"
+    }
+  ],
+  "results": [
+    {
+      "id": "createpropulsionsimulated:turpentine_bucket"
+    }
+  ]
+}

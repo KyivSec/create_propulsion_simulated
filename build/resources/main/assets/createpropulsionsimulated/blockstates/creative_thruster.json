@@ -1,0 +1,10 @@
+{
+  "multipart": [
+    { "when": { "facing": "north" }, "apply": { "model": "createpropulsionsimulated:block/creative_thruster" } },
+    { "when": { "facing": "south" }, "apply": { "model": "createpropulsionsimulated:block/creative_thruster", "y": 180 } },
+    { "when": { "facing": "west" },  "apply": { "model": "createpropulsionsimulated:block/creative_thruster", "y": 270 } },
+    { "when": { "facing": "east" },  "apply": { "model": "createpropulsionsimulated:block/creative_thruster", "y": 90 } },
+    { "when": { "facing": "up" },    "apply": { "model": "createpropulsionsimulated:block/creative_thruster", "x": 270 } },
+    { "when": { "facing": "down" },  "apply": { "model": "createpropulsionsimulated:block/creative_thruster", "x": 90 } }
+  ]
+}

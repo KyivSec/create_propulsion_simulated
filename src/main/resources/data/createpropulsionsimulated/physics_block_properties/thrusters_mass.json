@@ -1,0 +1,8 @@
+{
+  "selector": "#createpropulsionsimulated:thrusters",
+  "properties": {
+    "sable:mass": 4.0
+  }
+}
+
+

@@ -1,0 +1,20 @@
+{
+    "textures": [
+        "createpropulsionsimulated:plume/plume1",
+        "createpropulsionsimulated:plume/plume2",
+        "createpropulsionsimulated:plume/plume3",
+        "createpropulsionsimulated:plume/plume4",
+        "createpropulsionsimulated:plume/plume5",
+        "createpropulsionsimulated:plume/plume6",
+        "createpropulsionsimulated:smoke/big_smoke_2",
+        "createpropulsionsimulated:smoke/big_smoke_3",
+        "createpropulsionsimulated:smoke/big_smoke_4",
+        "createpropulsionsimulated:smoke/big_smoke_5",
+        "createpropulsionsimulated:smoke/big_smoke_6",
+        "createpropulsionsimulated:smoke/big_smoke_7",
+        "createpropulsionsimulated:smoke/big_smoke_8",
+        "createpropulsionsimulated:smoke/big_smoke_9",
+        "createpropulsionsimulated:smoke/big_smoke_10",
+        "createpropulsionsimulated:smoke/big_smoke_11"
+    ]
+}

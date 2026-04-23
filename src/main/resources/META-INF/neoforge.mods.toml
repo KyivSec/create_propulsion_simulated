@@ -1,0 +1,53 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "createpropulsionsimulated"
+version = "1.0.0"
+displayName = "Create Propulsion: Simulated"
+authors = "KyivSec"
+logoFile = "icon.png"
+description = '''Thruster-only Create Propulsion port for Sable + Create Aeronautics / Simulated.'''
+
+[[dependencies.createpropulsionsimulated]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.219,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.createpropulsionsimulated]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.createpropulsionsimulated]]
+modId = "create"
+type = "required"
+versionRange = "[6.0.9,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.createpropulsionsimulated]]
+modId = "sable"
+type = "required"
+versionRange = "[1.1.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.createpropulsionsimulated]]
+modId = "aeronautics"
+type = "required"
+versionRange = "[1.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.createpropulsionsimulated]]
+modId = "simulated"
+type = "required"
+versionRange = "[1.1.0,)"
+ordering = "NONE"
+side = "BOTH"
