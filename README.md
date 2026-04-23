@@ -16,15 +16,6 @@ A NeoForge 1.21.1 addon that ports only the thruster feature from Create Propuls
 
 - Standard Thruster block + block entity
 - Creative Thruster block + block entity (infinite fuel)
-- Dedicated creative tab with both thrusters
-- Create integration:
-  - wrenchable blocks (`IWrenchable`)
-  - goggles info (`IHaveGoggleInformation`)
-  - fluid tank behaviour (`SmartFluidTankBehaviour`) for lava input
-- Redstone throttle (`0..15`)
-- Obstruction efficiency scan behind nozzle
-- Lava fuel consumption from internal tank (standard thruster)
-- Bucket-to-tank fallback fueling
 - Physics integration through Sable's real force pipeline
 - Force-at-point application for torque correctness
 - Sub-level-safe projection for client particle emission
