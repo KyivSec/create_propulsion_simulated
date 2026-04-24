@@ -1,7 +1,7 @@
 package dev.createpropulsionsimulated.client.tooltip;
 
 import dev.createpropulsionsimulated.content.thruster.FluidThrusterProperties;
-import dev.createpropulsionsimulated.registry.CPSFluids;
+import dev.createpropulsionsimulated.content.thruster.ThrusterFuelRegistry;
 import net.createmod.catnip.lang.FontHelper.Palette;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -23,11 +23,14 @@ public final class FuelTooltipProvider implements ITooltipProvider {
         }
 
         final FluidStack fluidStack = fluidHandler.getFluidInTank(0);
-        if (fluidStack.isEmpty() || !fluidStack.getFluid().isSame(CPSFluids.TURPENTINE.get())) {
+        if (fluidStack.isEmpty()) {
             return;
         }
 
-        final FluidThrusterProperties properties = FluidThrusterProperties.TURPENTINE;
+        final FluidThrusterProperties properties = ThrusterFuelRegistry.getProperties(fluidStack).orElse(null);
+        if (properties == null) {
+            return;
+        }
         TooltipHandler.wrapShiftHoldText(tooltipList, "createpropulsionsimulated.tooltip.holdForRocketFuelSummary", () -> {
             final int thrustPercent = Math.round(properties.thrustMultiplier() * 100.0f);
             final Component thrustLine = Component.translatable("createpropulsionsimulated.tooltip.thrust")
@@ -57,7 +60,7 @@ public final class FuelTooltipProvider implements ITooltipProvider {
         }
 
         final FluidStack fluidStack = fluidHandler.getFluidInTank(0);
-        if (fluidStack.isEmpty() || !fluidStack.getFluid().isSame(CPSFluids.TURPENTINE.get())) {
+        if (fluidStack.isEmpty() || ThrusterFuelRegistry.getProperties(fluidStack).isEmpty()) {
             return Optional.empty();
         }
 

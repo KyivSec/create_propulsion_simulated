@@ -8,8 +8,6 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import dev.createpropulsionsimulated.config.ThrusterConfig;
 import dev.createpropulsionsimulated.debug.CPSDebugManager;
 import dev.createpropulsionsimulated.registry.CPSBlockEntities;
-import dev.createpropulsionsimulated.registry.CPSFluids;
-import dev.createpropulsionsimulated.registry.CPSItems;
 import dev.createpropulsionsimulated.utility.GoggleUtils;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.block.BlockEntitySubLevelActor;
@@ -41,8 +39,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
@@ -85,7 +85,7 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
     public void addBehaviours(final List<BlockEntityBehaviour> behaviours) {
         this.tank = SmartFluidTankBehaviour.single(this, ThrusterConfig.FUEL_TANK_CAPACITY_MB.get())
                 .allowInsertion();
-        this.tank.getPrimaryHandler().setValidator(stack -> stack.getFluid().isSame(CPSFluids.TURPENTINE.get()));
+        this.tank.getPrimaryHandler().setValidator(ThrusterFuelRegistry::isFuel);
         behaviours.add(this.tank);
     }
 
@@ -125,9 +125,11 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
         }
         final boolean hasResource = this.tickResourceAndGetAvailability(powered, throttle);
         final boolean canProduce = ThrusterState.canProduceThrust(powered, hasResource, this.requiresResourceForThrust());
+        final FluidThrusterProperties fuelProperties = this.getFuelProperties();
         if (canProduce) {
             final double efficiency = ThrusterState.obstructionEfficiency(this.unobstructedBlocks);
-            this.currentThrust = Math.min(ThrusterState.thrust(this.getBaseThrust(), throttle, efficiency), this.getRawThrustCap());
+            final double thrust = ThrusterState.thrust(this.getBaseThrust(), throttle, efficiency) * fuelProperties.thrustMultiplier();
+            this.currentThrust = Math.min(thrust, this.getRawThrustCap() * fuelProperties.thrustMultiplier());
         } else {
             this.currentThrust = 0.0d;
         }
@@ -252,28 +254,38 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
         if (!this.usesFuelTank() || this.tank == null) {
             return false;
         }
-        if (!heldStack.is(CPSItems.TURPENTINE_BUCKET.get())) {
+        final IFluidHandlerItem itemFluidHandler = heldStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (itemFluidHandler == null || itemFluidHandler.getTanks() <= 0) {
             return false;
         }
+
+        final FluidStack contained = itemFluidHandler.getFluidInTank(0);
+        if (!ThrusterFuelRegistry.isFuel(contained)) {
+            return false;
+        }
+
+        final FluidStack simulatedDrain = itemFluidHandler.drain(MB_PER_BUCKET, IFluidHandler.FluidAction.SIMULATE);
+        if (simulatedDrain.isEmpty() || !ThrusterFuelRegistry.isFuel(simulatedDrain)) {
+            return false;
+        }
+
+        final int accepted = this.tank.getPrimaryHandler().fill(simulatedDrain, IFluidHandler.FluidAction.SIMULATE);
+        if (accepted <= 0) {
+            return false;
+        }
+
         if (this.level == null || this.level.isClientSide()) {
             return true;
         }
 
-        final FluidStack stack = new FluidStack(CPSFluids.TURPENTINE.get(), MB_PER_BUCKET);
-        final int simulated = this.tank.getPrimaryHandler().fill(stack, IFluidHandler.FluidAction.SIMULATE);
-        if (simulated < MB_PER_BUCKET) {
+        final FluidStack drained = itemFluidHandler.drain(accepted, IFluidHandler.FluidAction.EXECUTE);
+        if (drained.isEmpty()) {
             return false;
         }
+        this.tank.getPrimaryHandler().fill(drained, IFluidHandler.FluidAction.EXECUTE);
 
-        this.tank.getPrimaryHandler().fill(stack, IFluidHandler.FluidAction.EXECUTE);
         if (!player.getAbilities().instabuild) {
-            heldStack.shrink(1);
-            final ItemStack emptyBucket = new ItemStack(net.minecraft.world.item.Items.BUCKET);
-            if (heldStack.isEmpty()) {
-                player.setItemInHand(hand, emptyBucket);
-            } else if (!player.getInventory().add(emptyBucket)) {
-                player.drop(emptyBucket, false);
-            }
+            player.setItemInHand(hand, itemFluidHandler.getContainer());
         }
 
         this.sync();
@@ -344,8 +356,11 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
             return false;
         }
 
+        final FluidThrusterProperties fuelProperties = this.getFuelProperties();
         if (powered && requireFuel && usesTank) {
-            this.fluidDrainAccumulator += throttle * ThrusterConfig.FUEL_MB_PER_TICK_AT_FULL_THROTTLE.get();
+            this.fluidDrainAccumulator += throttle
+                    * ThrusterConfig.FUEL_MB_PER_TICK_AT_FULL_THROTTLE.get()
+                    * fuelProperties.consumptionMultiplier();
             while (this.fluidDrainAccumulator >= 1.0d) {
                 final FluidStack drained = this.tank.getPrimaryHandler().drain(1, IFluidHandler.FluidAction.EXECUTE);
                 if (drained.isEmpty()) {
@@ -378,7 +393,7 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
         }
 
         final FluidStack fuel = this.tank.getPrimaryHandler().getFluidInTank(0);
-        if (!fuel.getFluid().isSame(CPSFluids.TURPENTINE.get())) {
+        if (!ThrusterFuelRegistry.isFuel(fuel)) {
             return CreateLang.builder().add(Component.translatable("createpropulsionsimulated.gui.goggles.thruster.status.wrong_fuel"))
                     .style(ChatFormatting.RED);
         }
@@ -436,15 +451,16 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
                 .forGoggles(tooltip);
 
         if (this.usesFuelTank()) {
-            final int capacity = ThrusterConfig.FUEL_TANK_CAPACITY_MB.get();
+            final int capacity = this.getFuelCapacityMb();
             final int current = this.getFuelAmountMb();
+            final FluidStack fuel = this.tank == null ? FluidStack.EMPTY : this.tank.getPrimaryHandler().getFluidInTank(0);
             CreateLang.builder()
                     .add(Component.translatable("createpropulsionsimulated.gui.goggles.thruster.fluid_container"))
                     .style(ChatFormatting.WHITE)
                     .forGoggles(tooltip);
             CreateLang.builder()
                     .text(" ")
-                    .add(Component.translatable("fluid.createpropulsionsimulated.turpentine"))
+                    .add(fuel.isEmpty() ? Component.translatable("createpropulsionsimulated.gui.goggles.thruster.status.no_fuel") : fuel.getHoverName())
                     .style(ChatFormatting.GRAY)
                     .forGoggles(tooltip);
             CreateLang.builder()
@@ -607,16 +623,23 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
             return 0.0d;
         }
 
-        final double airPressure = DimensionPhysicsData.getAirPressure(
-                this.level,
-                Sable.HELPER.projectOutOfSubLevel(this.level, JOMLConversion.atCenterOf(this.worldPosition))
-        );
+        double airPressureScale = 1.0d;
+        if (ThrusterConfig.USE_ATMOSPHERIC_PRESSURE.get()) {
+            final double airPressure = DimensionPhysicsData.getAirPressure(
+                    this.level,
+                    Sable.HELPER.projectOutOfSubLevel(this.level, JOMLConversion.atCenterOf(this.worldPosition))
+            );
+            if (Double.isFinite(airPressure)) {
+                final double amount = Math.clamp(ThrusterConfig.ATMOSPHERIC_PRESSURE_AMOUNT.get(), 0.0d, 2.0d);
+                airPressureScale = Math.max(0.0d, 1.0d + (airPressure - 1.0d) * amount);
+            }
+        }
         final double airflowScaling = this.getAirflowScaling(subLevel);
-        if (!Double.isFinite(airPressure) || !Double.isFinite(airflowScaling)) {
+        if (!Double.isFinite(airPressureScale) || !Double.isFinite(airflowScaling)) {
             return 0.0d;
         }
 
-        return rawThrust * airPressure * airflowScaling;
+        return rawThrust * airPressureScale * airflowScaling;
     }
 
     private double getAirflowScaling(final ServerSubLevel subLevel) {
@@ -694,6 +717,14 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
             return new Vector3d();
         }
         return new Vector3d(impulseLocal).mul(scale);
+    }
+
+    protected FluidThrusterProperties getFuelProperties() {
+        if (!this.usesFuelTank() || this.tank == null) {
+            return FluidThrusterProperties.DEFAULT;
+        }
+        final FluidStack fuel = this.tank.getPrimaryHandler().getFluidInTank(0);
+        return ThrusterFuelRegistry.getProperties(fuel).orElse(FluidThrusterProperties.DEFAULT);
     }
 
     private Vector3d computeGroundFrictionImpulse(final ServerSubLevel subLevel,

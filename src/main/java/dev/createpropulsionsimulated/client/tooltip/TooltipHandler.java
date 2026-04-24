@@ -1,15 +1,8 @@
 package dev.createpropulsionsimulated.client.tooltip;
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
@@ -46,32 +39,7 @@ public final class TooltipHandler {
     }
 
     public static void addToTooltipComponents(final RenderTooltipEvent.GatherComponents event) {
-        final ItemStack stack = event.getItemStack();
-        if (stack.isEmpty()) {
-            return;
-        }
-
-        final ItemTooltipEvent syntheticEvent = new ItemTooltipEvent(
-                stack,
-                Minecraft.getInstance().player,
-                new ArrayList<>(),
-                TooltipFlag.Default.NORMAL,
-                Item.TooltipContext.EMPTY
-        );
-
-        final List<TooltipComponent> visualComponents = new ArrayList<>();
-        for (final ITooltipProvider provider : TOP_PROVIDERS) {
-            provider.getVisual(syntheticEvent).ifPresent(visualComponents::add);
-        }
-        if (visualComponents.isEmpty()) {
-            return;
-        }
-
-        final List<Either<FormattedText, TooltipComponent>> elements = event.getTooltipElements();
-        int insertIndex = elements.isEmpty() ? 0 : 1;
-        for (final TooltipComponent component : visualComponents) {
-            elements.add(insertIndex++, Either.right(component));
-        }
+        // Visual tooltip components are intentionally disabled; keep text-only tooltip flow.
     }
 
     public static void wrapShiftHoldText(final List<Component> tooltipList, final String langKey, final Runnable addDetailedContent) {
