@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=up":    { "model": "createpropulsionsimulated:block/ion_thruster" },
+    "facing=down":  { "model": "createpropulsionsimulated:block/ion_thruster", "x": 180 },
+    "facing=north": { "model": "createpropulsionsimulated:block/ion_thruster", "x": 90 },
+    "facing=south": { "model": "createpropulsionsimulated:block/ion_thruster", "x": 90, "y": 180 },
+    "facing=east":  { "model": "createpropulsionsimulated:block/ion_thruster", "x": 90, "y": 90 },
+    "facing=west":  { "model": "createpropulsionsimulated:block/ion_thruster", "x": 90, "y": 270 }
+  }
+}
