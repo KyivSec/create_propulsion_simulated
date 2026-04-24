@@ -38,6 +38,8 @@
   "createpropulsionsimulated.gui.creative_thruster.power_behaviour": "Generated Thrust",
   "createpropulsionsimulated.tooltip.holdForRocketFuelSummary": "Hold [%1$s] for Rocket Fuel Summary",
   "createpropulsionsimulated.tooltip.thrust": "Thrust",
+  "createpropulsionsimulated.tooltip.airflow": "Airflow: ",
+  "createpropulsionsimulated.tooltip.thrust1": "Thrust: ",
   "createpropulsionsimulated.tooltip.consumption": "Burn Rate",
   "createpropulsionsimulated.thruster.tooltip.summary": "Provides directional thrust when powered by redstone and fueled with Turpentine.",
   "createpropulsionsimulated.creative_thruster.tooltip.summary": "Infinite-fuel thruster with configurable output and particle mode cycling via wrench.",

@@ -107,13 +107,13 @@ public class CreativeThrusterBlockEntity extends ThrusterBlockEntity {
                 .forGoggles(tooltip);
         CreateLang.builder()
                 .add(Component.literal(" "))
-                .add(Component.literal("Thrust: ").withStyle(ChatFormatting.GRAY))
+                .add(Component.translatable("createpropulsionsimulated.tooltip.thrust1").withStyle(ChatFormatting.GRAY))
                 .add(Component.literal(String.format(Locale.ROOT, "%.2f", this.getDisplayedThrustPn())).withStyle(ChatFormatting.AQUA))
                 .add(Component.literal(" pN").withStyle(ChatFormatting.GRAY))
                 .forGoggles(tooltip);
         CreateLang.builder()
                 .add(Component.literal(" "))
-                .add(Component.literal("Airflow: ").withStyle(ChatFormatting.GRAY))
+                .add(Component.translatable("createpropulsionsimulated.tooltip.airflow").withStyle(ChatFormatting.GRAY))
                 .add(Component.literal(String.format(Locale.ROOT, "%.2f", this.getDisplayedAirflowMs())).withStyle(ChatFormatting.AQUA))
                 .add(Component.literal(" m/s").withStyle(ChatFormatting.GRAY))
                 .forGoggles(tooltip);
