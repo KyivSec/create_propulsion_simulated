@@ -29,7 +29,7 @@ public class CreativeThrusterBlockEntity extends ThrusterBlockEntity {
     @Override
     public void addBehaviours(final List<BlockEntityBehaviour> behaviours) {
         this.creativePowerBehaviour = new CreativeThrusterPowerScrollValueBehaviour(this);
-        this.creativePowerBehaviour.setValue(49);
+        this.creativePowerBehaviour.setTargetThrust(600);
         this.creativePowerBehaviour.withCallback(v -> this.sync());
         behaviours.add(this.creativePowerBehaviour);
     }
@@ -127,6 +127,9 @@ public class CreativeThrusterBlockEntity extends ThrusterBlockEntity {
             case PLUME -> particleBuilder.add(CreateLang.builder()
                     .add(Component.translatable("createpropulsionsimulated.gui.goggles.creative_thruster.particle.plume"))
                     .style(ChatFormatting.GOLD));
+            case ION -> particleBuilder.add(CreateLang.builder()
+                    .add(Component.translatable("createpropulsionsimulated.gui.goggles.creative_thruster.particle.ion"))
+                    .style(ChatFormatting.LIGHT_PURPLE));
             case NONE -> particleBuilder.add(CreateLang.builder()
                     .add(Component.translatable("createpropulsionsimulated.gui.goggles.creative_thruster.particle.none"))
                     .style(ChatFormatting.DARK_GRAY));
@@ -136,11 +139,12 @@ public class CreativeThrusterBlockEntity extends ThrusterBlockEntity {
 
     @Override
     public void cyclePlumeType() {
-        int next = this.plumeType.ordinal() + 1;
-        if (next >= PlumeType.values().length) {
-            next = 0;
-        }
-        this.plumeType = PlumeType.values()[next];
+        this.plumeType = switch (this.plumeType) {
+            case PLASMA -> PlumeType.PLUME;
+            case PLUME -> PlumeType.ION;
+            case ION -> PlumeType.NONE;
+            case NONE -> PlumeType.PLASMA;
+        };
         this.sync();
     }
 

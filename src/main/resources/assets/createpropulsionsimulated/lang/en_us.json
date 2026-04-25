@@ -28,6 +28,7 @@
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle": "Particle",
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle.plasma": "Plasma",
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle.plume": "Plume",
+  "createpropulsionsimulated.gui.goggles.creative_thruster.particle.ion": "Ion",
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle.none": "None",
   "createpropulsionsimulated.gui.goggles.thruster.thrust_output": "Thrust output:",
   "createpropulsionsimulated.gui.goggles.thruster.fluid_container": "Fluid container info:",

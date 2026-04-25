@@ -59,8 +59,12 @@ public final class ThrusterParticles {
             final double vz = dir.z * speed;
             final var particle = blockEntity.isIon()
                     ? CPSParticleTypes.ION.get()
-                    : ((blockEntity.isCreative() && blockEntity.getPlumeType() == ThrusterBlockEntity.PlumeType.PLASMA)
-                    ? CPSParticleTypes.PLASMA.get()
+                    : (blockEntity.isCreative()
+                    ? switch (blockEntity.getPlumeType()) {
+                        case PLASMA -> CPSParticleTypes.PLASMA.get();
+                        case ION -> CPSParticleTypes.ION.get();
+                        case PLUME, NONE -> CPSParticleTypes.PLUME.get();
+                    }
                     : CPSParticleTypes.PLUME.get());
 
             if (level instanceof final ClientLevel clientLevel) {

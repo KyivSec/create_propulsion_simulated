@@ -13,6 +13,8 @@ public final class ThrusterConfig {
     public static final ModConfigSpec.IntValue FUEL_TANK_CAPACITY_MB;
     public static final ModConfigSpec.IntValue THRUSTER_MAX_SPEED;
     public static final ModConfigSpec.IntValue CREATIVE_THRUSTER_MAX_SPEED;
+    public static final ModConfigSpec.IntValue ION_THRUSTER_MAX_SPEED;
+    public static final ModConfigSpec.DoubleValue CREATIVE_THRUSTER_MAX_THRUST;
     public static final ModConfigSpec.DoubleValue FUEL_MB_PER_TICK_AT_FULL_THROTTLE;
     public static final ModConfigSpec.IntValue ION_THRUSTER_ENERGY_CAPACITY_FE;
     public static final ModConfigSpec.DoubleValue ION_THRUSTER_FE_PER_TICK_AT_FULL_THROTTLE;
@@ -34,7 +36,8 @@ public final class ThrusterConfig {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         builder.push("thruster");
-        BASE_THRUST = builder.comment("Base thrust at redstone 15 and full obstruction efficiency for the standard thruster.")
+        BASE_THRUST = builder.comment("Base thrust at redstone 15 and full obstruction efficiency for the standard thruster.",
+                        "Effective thrust uses: baseThrust * fuel_thrust_percent / 100.")
                 .defineInRange("baseThrust", 600.0d, 1.0d, 10_000_000.0d);
         OBSTRUCTION_SCAN_LENGTH = builder.comment("How many blocks behind the nozzle are checked for obstruction.")
                 .defineInRange("obstructionScanLength", 10, 1, 64);
@@ -45,7 +48,11 @@ public final class ThrusterConfig {
         THRUSTER_MAX_SPEED = builder.comment("Standard thruster speed limit in blocks per second.")
                 .defineInRange("thrusterMaxSpeed", 600, 1, 5000);
         CREATIVE_THRUSTER_MAX_SPEED = builder.comment("Creative thruster speed limit in blocks per second.")
-                .defineInRange("creativeThrusterMaxSpeed", 600, 1, 1000);
+                .defineInRange("creativeThrusterMaxSpeed", 10000, 1, 100000);
+        ION_THRUSTER_MAX_SPEED = builder.comment("Ion thruster speed limit in blocks per second.")
+                .defineInRange("ionThrusterMaxSpeed", 1000, 1, 5000);
+        CREATIVE_THRUSTER_MAX_THRUST = builder.comment("Creative thruster max thrust in pN.")
+                .defineInRange("creativeThrusterMaxThrust", 10_000.0d, 10.0d, 1_000_000.0d);
         FUEL_MB_PER_TICK_AT_FULL_THROTTLE = builder.comment("Fuel consumption in millibuckets per tick at full redstone throttle.")
                 .defineInRange("fuelMbPerTickAtFullThrottle", 1.0d, 0.0001d, 1000.0d);
         ION_THRUSTER_ENERGY_CAPACITY_FE = builder.comment("Ion thruster internal FE capacity.")
@@ -53,7 +60,7 @@ public final class ThrusterConfig {
         ION_THRUSTER_FE_PER_TICK_AT_FULL_THROTTLE = builder.comment("Ion thruster energy consumption in FE per tick at full redstone throttle.")
                 .defineInRange("ionThrusterFePerTickAtFullThrottle", 80.0d, 0.0001d, 1000000.0d);
         ION_THRUSTER_BASE_THRUST = builder.comment("Ion thruster base thrust at redstone 15 and full obstruction efficiency.")
-                .defineInRange("ionThrusterBaseThrust", 600.0d, 1.0d, 10000000.0d);
+                .defineInRange("ionThrusterBaseThrust", 1000.d, 1.d, 10000000.d);
         DAMAGE_ENTITIES = builder.comment("If true, entities inside active thruster plume are damaged.")
                 .define("damageEntities", true);
         DAMAGE_TICK_INTERVAL = builder.comment("How often plume damage checks run, in ticks.")
@@ -76,12 +83,14 @@ public final class ThrusterConfig {
                 .defineInRange("groundedSpeedDeadzone", 0.03d, 0.0d, 5.0d);
         GROUND_PROBE_DISTANCE = builder.comment("How far downward a thruster probes to detect grounded support.")
                 .defineInRange("groundProbeDistance", 1.5d, 0.05d, 5.0d);
+        builder.push("fuelTable");
         FUEL_PROPERTIES = builder.comment(
                         "Fuel table entries as '<namespace:fluid>=<thrust_percent>,<burn_rate_percent>'.",
                         "Example: createpropulsionsimulated:turpentine=80,120"
                 )
                 .defineListAllowEmpty("fuelProperties", ThrusterConfig::defaultFuelProperties, () -> "",
                         value -> value instanceof String);
+        builder.pop();
         builder.pop();
 
         SPEC = builder.build();
@@ -111,7 +120,10 @@ public final class ThrusterConfig {
                 "tfmg:gasoline=125,80",
                 "tfmg:lpg=120,85",
                 "northstar:hydrocarbon=130,75",
-                "stellaris:fuel=115,100"
+                "stellaris:fuel=115,100",
+                "mekanism:hydrogen=120,80",
+                "createaddition:bioethanol=75,135",
+                "createaddition:seed_oil=55,170"
         );
     }
 }

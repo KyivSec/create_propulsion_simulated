@@ -4,7 +4,7 @@ license = "MIT"
 
 [[mods]]
 modId = "createpropulsionsimulated"
-version = "1.0.2"
+version = "1.0.3"
 displayName = "Create Propulsion: Simulated"
 authors = "KyivSec"
 logoFile = "icon.png"

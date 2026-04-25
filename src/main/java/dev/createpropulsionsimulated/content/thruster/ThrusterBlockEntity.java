@@ -54,7 +54,6 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
     protected static final int OBSTRUCTION_LENGTH = ThrusterState.FULL_EFFICIENCY_AIR_GAP;
     protected static final float LOWEST_POWER_THRESHOLD = 5.0f / 15.0f;
     protected static final double STANDARD_MAX_THRUST_PN = 600.0d;
-    protected static final double CREATIVE_MAX_THRUST_PN = 1000.0d;
     private static final double EARTH_GRAVITY = 9.81d;
 
     protected SmartFluidTankBehaviour tank;
@@ -70,7 +69,8 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
     public enum PlumeType {
         PLASMA,
         PLUME,
-        NONE
+        NONE,
+        ION
     }
 
     public ThrusterBlockEntity(final BlockEntityType<?> type, final BlockPos pos, final BlockState blockState) {
@@ -128,8 +128,11 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
         final FluidThrusterProperties fuelProperties = this.getFuelProperties();
         if (canProduce) {
             final double efficiency = ThrusterState.obstructionEfficiency(this.unobstructedBlocks);
-            final double thrust = ThrusterState.thrust(this.getBaseThrust(), throttle, efficiency) * fuelProperties.thrustMultiplier();
-            this.currentThrust = Math.min(thrust, this.getRawThrustCap() * fuelProperties.thrustMultiplier());
+            final double effectiveBaseThrust = this.getBaseThrust() * fuelProperties.thrustMultiplier();
+            final double thrust = ThrusterState.thrust(effectiveBaseThrust, throttle, efficiency);
+            this.currentThrust = this.shouldClampRawThrust()
+                    ? Math.min(thrust, this.getRawThrustCap() * fuelProperties.thrustMultiplier())
+                    : thrust;
         } else {
             this.currentThrust = 0.0d;
         }
@@ -293,11 +296,15 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
     }
 
     protected double getBaseThrust() {
-        return Math.min(ThrusterConfig.BASE_THRUST.get(), this.getRawThrustCap());
+        return ThrusterConfig.BASE_THRUST.get();
     }
 
     protected double getRawThrustCap() {
-        return this.isCreative() ? CREATIVE_MAX_THRUST_PN : STANDARD_MAX_THRUST_PN;
+        return this.isCreative() ? ThrusterConfig.CREATIVE_THRUSTER_MAX_THRUST.get() : STANDARD_MAX_THRUST_PN;
+    }
+
+    protected boolean shouldClampRawThrust() {
+        return this.isCreative() || this.isIon();
     }
 
     public float getCreativeTargetThrust() {
@@ -630,8 +637,7 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
                     Sable.HELPER.projectOutOfSubLevel(this.level, JOMLConversion.atCenterOf(this.worldPosition))
             );
             if (Double.isFinite(airPressure)) {
-                final double amount = Math.clamp(ThrusterConfig.ATMOSPHERIC_PRESSURE_AMOUNT.get(), 0.0d, 2.0d);
-                airPressureScale = Math.max(0.0d, 1.0d + (airPressure - 1.0d) * amount);
+                airPressureScale = this.getAtmosphericScaleForThrusterType(airPressure);
             }
         }
         final double airflowScaling = this.getAirflowScaling(subLevel);
@@ -640,6 +646,23 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
         }
 
         return rawThrust * airPressureScale * airflowScaling;
+    }
+
+    private double getAtmosphericScaleForThrusterType(final double airPressure) {
+        final double amount = Math.clamp(ThrusterConfig.ATMOSPHERIC_PRESSURE_AMOUNT.get(), 0.0d, 2.0d);
+        final double clampedPressure = Math.max(0.0d, airPressure);
+
+        if (this.isIon()) {
+            // Ion propulsion suffers strongly in dense air and ramps up toward vacuum.
+            // 1.0 pressure -> ~20% thrust, near-vacuum -> ~100%.
+            final double target = Math.clamp(1.0d - 0.8d * clampedPressure, 0.2d, 1.0d);
+            return Math.clamp(1.0d + (target - 1.0d) * amount, 0.05d, 5.0d);
+        }
+
+        // Chemical/rocket thrusters stay mostly constant; altitude gives a mild bonus.
+        final double vacuumBonus = clampedPressure < 1.0d ? (1.0d - clampedPressure) * 0.15d : 0.0d;
+        final double target = 1.0d + vacuumBonus;
+        return Math.clamp(1.0d + (target - 1.0d) * amount, 0.05d, 5.0d);
     }
 
     private double getAirflowScaling(final ServerSubLevel subLevel) {
@@ -658,7 +681,9 @@ public class ThrusterBlockEntity extends SmartBlockEntity implements BlockEntity
     }
 
     private Vector3d limitImpulseBySpeed(final ServerSubLevel subLevel, final RigidBodyHandle handle, final Vector3d impulseLocal) {
-        final int maxSpeed = this.isCreative()
+        final int maxSpeed = this.isIon()
+                ? ThrusterConfig.ION_THRUSTER_MAX_SPEED.get()
+                : this.isCreative()
                 ? ThrusterConfig.CREATIVE_THRUSTER_MAX_SPEED.get()
                 : ThrusterConfig.THRUSTER_MAX_SPEED.get();
         if (maxSpeed <= 0) {
