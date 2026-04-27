@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "create_propulsion_simulated:thruster",
+    "create_propulsion_simulated:creative_thruster",
+    "create_propulsion_simulated:ion_thruster"
+  ]
+}
