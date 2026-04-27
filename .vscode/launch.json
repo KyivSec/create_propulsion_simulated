@@ -12,11 +12,11 @@
       "projectName": "create-propulsion-simulated",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\clientRunProgramArgs.txt"
+        "@C:\\Users\\Admin\\Desktop\\cps104\\create_propulsion_simulated\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreatepropulsionsimulated%%C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\bin\\main"
+        "@C:\\Users\\Admin\\Desktop\\cps104\\create_propulsion_simulated\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatepropulsionsimulated%%C:\\Users\\Admin\\Desktop\\cps104\\create_propulsion_simulated\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -34,11 +34,11 @@
       "projectName": "create-propulsion-simulated",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\serverRunProgramArgs.txt"
+        "@C:\\Users\\Admin\\Desktop\\cps104\\create_propulsion_simulated\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dcreatepropulsionsimulated%%C:\\Users\\Admin\\Desktop\\Aeronautics Quick Assemble\\Aeronautics Propulsion\\create-propulsion-simulated\\bin\\main"
+        "@C:\\Users\\Admin\\Desktop\\cps104\\create_propulsion_simulated\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dcreatepropulsionsimulated%%C:\\Users\\Admin\\Desktop\\cps104\\create_propulsion_simulated\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},

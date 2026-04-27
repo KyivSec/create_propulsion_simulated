@@ -16,6 +16,9 @@ java {
 }
 
 repositories {
+    flatDir {
+        dir 'libs'
+    }
     mavenLocal()
     mavenCentral()
 
@@ -76,6 +79,13 @@ dependencies {
 
     implementation("dev.eriksonn.aeronautics:aeronautics-neoforge-${minecraft_version}:${aeronautics_version}")
     implementation("dev.simulated_team.simulated:simulated-neoforge-${minecraft_version}:${simulated_version}")
+
+    jarJar(implementation(group: 'dev.createpropulsionsimulated', name: 'catools', version: '1.0.0')) {
+        version {
+            strictly '[1.0.0, 2.0.0)' // The version range your mod is compatible with
+            prefer '1.0.0'            // The version actually bundled inside your JAR
+        }
+    }
 
     testImplementation(platform("org.junit:junit-bom:5.11.4"))
     testImplementation("org.junit.jupiter:junit-jupiter")

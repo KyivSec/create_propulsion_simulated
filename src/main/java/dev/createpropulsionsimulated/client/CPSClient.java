@@ -5,6 +5,7 @@ import dev.createpropulsionsimulated.client.particle.ThrusterPlasmaParticle;
 import dev.createpropulsionsimulated.client.particle.ThrusterPlumeParticle;
 import dev.createpropulsionsimulated.client.particle.ThrusterIonParticle;
 import dev.createpropulsionsimulated.client.renderer.CreativeThrusterRenderer;
+import dev.createpropulsionsimulated.content.tilt_adapter.TiltAdapterRenderer;
 import dev.createpropulsionsimulated.client.visual.CreativeThrusterVisual;
 import dev.createpropulsionsimulated.content.ponder.CPSPonderPlugin;
 import dev.createpropulsionsimulated.content.wing.CopycatWingModel;
@@ -58,6 +59,7 @@ public final class CPSClient {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         CPSPartialModels.init();
         event.registerBlockEntityRenderer(CPSBlockEntities.CREATIVE_THRUSTER.get(), CreativeThrusterRenderer::new);
+        event.registerBlockEntityRenderer(CPSBlockEntities.TILT_ADAPTER.get(), TiltAdapterRenderer::new);
     }
 
     @SubscribeEvent
@@ -86,6 +88,11 @@ public final class CPSClient {
                     .builder(CPSBlockEntities.CREATIVE_THRUSTER.get())
                     .factory(CreativeThrusterVisual::new)
                     .skipVanillaRender(be -> true)
+                    .apply();
+            SimpleBlockEntityVisualizer
+                    .builder(CPSBlockEntities.TILT_ADAPTER.get())
+                    .factory(dev.createpropulsionsimulated.client.visual.TiltAdapterVisual::new)
+                    .skipVanillaRender(be -> false)
                     .apply();
         });
     }

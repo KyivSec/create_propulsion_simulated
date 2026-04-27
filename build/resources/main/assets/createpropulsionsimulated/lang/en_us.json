@@ -48,5 +48,8 @@
   "createpropulsionsimulated.copycat_wing.tooltip.summary": "A lightweight copycat sail block for contraptions. Place and then apply another block to copy its material.",
   "createpropulsionsimulated.copycat_wing_8.tooltip.summary": "A wider copycat sail block for contraptions. Place and then apply another block to copy its material.",
   "createpropulsionsimulated.copycat_wing_12.tooltip.summary": "The widest copycat sail block for contraptions. Place and then apply another block to copy its material.",
-  "createpropulsionsimulated.turpentine_bucket.tooltip.summary": "Fuel for Thrusters. Hold Shift to see thrust and burn rate summary."
+  "createpropulsionsimulated.turpentine_bucket.tooltip.summary": "Fuel for Thrusters. Hold Shift to see thrust and burn rate summary.",
+  "block.createpropulsionsimulated.tilt_adapter": "Tilt Adapter",
+  "item.createpropulsionsimulated.tilt_adapter": "Tilt Adapter",
+  "createpropulsionsimulated.tilt_adapter.tooltip.summary": "A device that tilts rotational output based on analog redstone signal."
 }

@@ -31,6 +31,9 @@ public final class CPSItems {
     public static final DeferredItem<BlockItem> COPYCAT_WING_12 = REGISTER.register("copycat_wing_12",
             () -> new BlockItem(CPSBlocks.COPYCAT_WING_12.get(), new Item.Properties()));
 
+    public static final DeferredItem<BlockItem> TILT_ADAPTER = REGISTER.register("tilt_adapter",
+            () -> new BlockItem(CPSBlocks.TILT_ADAPTER.get(), new Item.Properties()));
+
     public static final DeferredItem<BurnableItem> PINE_RESIN = REGISTER.register("pine_resin",
             () -> new BurnableItem(new Item.Properties(), 1200));
 

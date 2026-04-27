@@ -4,6 +4,7 @@ import dev.createpropulsionsimulated.CreatePropulsionSimulated;
 import dev.createpropulsionsimulated.content.thruster.CreativeThrusterBlockEntity;
 import dev.createpropulsionsimulated.content.thruster.IonThrusterBlockEntity;
 import dev.createpropulsionsimulated.content.thruster.ThrusterBlockEntity;
+import dev.createpropulsionsimulated.content.tilt_adapter.TiltAdapterBlockEntity;
 import dev.createpropulsionsimulated.content.wing.CopycatWingBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,6 +28,9 @@ public final class CPSBlockEntities {
                     CPSBlocks.COPYCAT_WING.get(),
                     CPSBlocks.COPYCAT_WING_8.get(),
                     CPSBlocks.COPYCAT_WING_12.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TiltAdapterBlockEntity>> TILT_ADAPTER = REGISTER.register("tilt_adapter",
+            () -> BlockEntityType.Builder.of(TiltAdapterBlockEntity::new, CPSBlocks.TILT_ADAPTER.get()).build(null));
 
     private CPSBlockEntities() {
     }

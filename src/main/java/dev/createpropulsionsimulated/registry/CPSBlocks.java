@@ -4,6 +4,7 @@ import dev.createpropulsionsimulated.CreatePropulsionSimulated;
 import dev.createpropulsionsimulated.content.thruster.CreativeThrusterBlock;
 import dev.createpropulsionsimulated.content.thruster.IonThrusterBlock;
 import dev.createpropulsionsimulated.content.thruster.ThrusterBlock;
+import dev.createpropulsionsimulated.content.tilt_adapter.TiltAdapterBlock;
 import dev.createpropulsionsimulated.content.wing.CopycatWingBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -51,6 +52,13 @@ public final class CPSBlocks {
                     .strength(1.5f, 2.0f)
                     .sound(SoundType.COPPER)
                     .noOcclusion(), 12, () -> CPSItems.COPYCAT_WING.get()));
+
+    public static final DeferredBlock<TiltAdapterBlock> TILT_ADAPTER = REGISTER.register("tilt_adapter",
+            () -> new TiltAdapterBlock(BlockBehaviour.Properties.of()
+                    .strength(3.5f, 6.0f)
+                    .sound(SoundType.NETHERITE_BLOCK)
+                    .noOcclusion()
+                    .requiresCorrectToolForDrops()));
 
     private CPSBlocks() {
     }

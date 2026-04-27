@@ -15,6 +15,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -195,17 +198,31 @@ public class CopycatWingBlock extends CopycatBlock implements BlockSubLevelLiftP
 
     @Override
     public float sable$getLiftScalar() {
-        return 0.0f;
+        float liftRatio = 1.0f;
+        if (width == 8) liftRatio = 170.0f / 150.0f;
+        if (width == 12) liftRatio = 190.0f / 150.0f;
+        return 0.475f * liftRatio;
     }
 
     @Override
     public float sable$getParallelDragScalar() {
-        return 1.75f;
+        float dragRatio = 1.0f;
+        if (width == 8) dragRatio = 160.0f / 150.0f;
+        if (width == 12) dragRatio = 170.0f / 150.0f;
+        return 1.75f * dragRatio;
+    }
+
+    @Override
+    public float sable$getDirectionlessDragScalar() {
+        float k1 = sable$getParallelDragScalar();
+        float k2 = sable$getLiftScalar();
+        return (float) ((-k1 + Math.sqrt(k1 * k1 + k2 * k2)) / 2.0);
     }
 
     @Override
     public @NotNull Direction sable$getNormal(final BlockState blockState) {
-        return blockState.getValue(FACING);
+        Direction facing = blockState.getValue(FACING);
+        return Direction.get(Direction.AxisDirection.POSITIVE, facing.getAxis());
     }
 
     private static VoxelShaper wingShape(final int width) {
@@ -213,5 +230,27 @@ public class CopycatWingBlock extends CopycatBlock implements BlockSubLevelLiftP
         return ThrusterShapes.ShapeBuilder.shape()
                 .add(Block.box(0, 8 - halfWidth, 0, 16, 8 + halfWidth, 16))
                 .forDirectional(Direction.UP);
+    }
+
+    @Override
+    public void fallOn(final Level level, final BlockState state, final BlockPos pos, final Entity entity, final float fallDistance) {
+        super.fallOn(level, state, pos, entity, 0);
+    }
+
+    @Override
+    public void updateEntityAfterFallOn(final BlockGetter level, final Entity entity) {
+        if (entity.isSuppressingBounce()) {
+            super.updateEntityAfterFallOn(level, entity);
+        } else {
+            this.bounce(entity);
+        }
+    }
+
+    private void bounce(final Entity pEntity) {
+        final Vec3 Vec3 = pEntity.getDeltaMovement();
+        if (Vec3.y < 0.0D) {
+            final double d0 = pEntity instanceof LivingEntity ? 1.0D : 0.8D;
+            pEntity.setDeltaMovement(Vec3.x, -Vec3.y * (double) 0.26F * d0, Vec3.z);
+        }
     }
 }

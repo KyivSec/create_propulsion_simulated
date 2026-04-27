@@ -21,7 +21,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import java.util.List;
 
 public class IonThrusterBlockEntity extends ThrusterBlockEntity {
-    private static final double ION_MAX_THRUST_PN = 1000.0d;
+    private static final double ION_MAX_THRUST_PN = ThrusterConfig.ION_THRUSTER_MAX_SPEED.get();
     private int energyStored;
     private double energyDrainAccumulator;
 

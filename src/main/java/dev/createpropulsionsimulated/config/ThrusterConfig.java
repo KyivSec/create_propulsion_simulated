@@ -31,6 +31,8 @@ public final class ThrusterConfig {
     public static final ModConfigSpec.DoubleValue GROUNDED_SPEED_DEADZONE;
     public static final ModConfigSpec.DoubleValue GROUND_PROBE_DISTANCE;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> FUEL_PROPERTIES;
+    public static final ModConfigSpec.DoubleValue TILT_ADAPTER_MAX_ANGLE;
+
 
     static {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -46,11 +48,11 @@ public final class ThrusterConfig {
         FUEL_TANK_CAPACITY_MB = builder.comment("Internal fuel tank capacity in millibuckets.")
                 .defineInRange("fuelTankCapacityMb", 250, 250, 64000);
         THRUSTER_MAX_SPEED = builder.comment("Standard thruster speed limit in blocks per second.")
-                .defineInRange("thrusterMaxSpeed", 600, 1, 5000);
+                .defineInRange("thrusterMaxSpeed", 600, 1, 10000000);
         CREATIVE_THRUSTER_MAX_SPEED = builder.comment("Creative thruster speed limit in blocks per second.")
                 .defineInRange("creativeThrusterMaxSpeed", 10000, 1, 100000);
         ION_THRUSTER_MAX_SPEED = builder.comment("Ion thruster speed limit in blocks per second.")
-                .defineInRange("ionThrusterMaxSpeed", 1000, 1, 5000);
+                .defineInRange("ionThrusterMaxSpeed", 1000, 1, 10000000);
         CREATIVE_THRUSTER_MAX_THRUST = builder.comment("Creative thruster max thrust in pN.")
                 .defineInRange("creativeThrusterMaxThrust", 10_000.0d, 10.0d, 1_000_000.0d);
         FUEL_MB_PER_TICK_AT_FULL_THROTTLE = builder.comment("Fuel consumption in millibuckets per tick at full redstone throttle.")
@@ -68,7 +70,7 @@ public final class ThrusterConfig {
         NOZZLE_OFFSET_FROM_CENTER = builder.comment("Offset from the block center where force is applied.")
                 .defineInRange("nozzleOffsetFromCenter", 0.45d, 0.0d, 1.5d);
         USE_ATMOSPHERIC_PRESSURE = builder.comment("If true, atmospheric pressure affects thruster output at altitude.")
-                .define("useAtmosphericPressure", true);
+                .define("useAtmosphericPressure", false);
         ATMOSPHERIC_PRESSURE_AMOUNT = builder.comment("Strength of atmospheric pressure influence. 1.0 = full effect, 0.0 = no effect.")
                 .defineInRange("atmosphericPressureAmount", 1.0d, 0.0d, 2.0d);
         CLIENT_PARTICLES_PER_TICK = builder.comment("Max client particles per tick while active.")
@@ -90,6 +92,11 @@ public final class ThrusterConfig {
                 )
                 .defineListAllowEmpty("fuelProperties", ThrusterConfig::defaultFuelProperties, () -> "",
                         value -> value instanceof String);
+        builder.pop();
+
+        builder.push("tiltAdapter");
+        TILT_ADAPTER_MAX_ANGLE = builder.comment("Maximum angle the tilt adapter can rotate to, in degrees.")
+                .defineInRange("tiltAdapterMaxAngle", 90.0d, 0.0d, 180.0d);
         builder.pop();
         builder.pop();
 
