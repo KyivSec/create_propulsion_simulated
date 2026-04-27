@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "simulated:white_symmetric_sail"
+    },
+    {
+      "item": "create:zinc_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "createpropulsionsimulated:copycat_wing"
+  }
+}

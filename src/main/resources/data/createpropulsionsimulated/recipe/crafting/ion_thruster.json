@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RBI",
+    "SPS",
+    "SCS"
+  ],
+  "key": {
+    "R": {
+      "item": "simulated:redstone_accumulator"
+    },
+    "B": {
+      "item": "create:brass_sheet"
+    },
+    "I": {
+      "item": "simulated:redstone_inductor"
+    },
+    "S": {
+      "item": "create:sturdy_sheet"
+    },
+    "P": {
+      "item": "create:precision_mechanism"
+    },
+    "C": {
+      "item": "create:chute"
+    }
+  },
+  "result": {
+    "count": 1,
+    "id": "createpropulsionsimulated:ion_thruster"
+  }
+}

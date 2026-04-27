@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "#c:turpentine",
+    { "id": "createpropulsionsimulated:turpentine", "required": false },
+    { "id": "createdieselgenerators:plant_oil", "required": false },
+    { "id": "immersiveengineering:plantoil", "required": false },
+    { "id": "createdieselgenerators:ethanol", "required": false },
+    { "id": "immersiveengineering:ethanol", "required": false },
+    { "id": "mekanismgenerators:bioethanol", "required": false },
+    { "id": "northstar:biofuel", "required": false },
+    { "id": "createdieselgenerators:biodiesel", "required": false },
+    { "id": "immersiveengineering:biodiesel", "required": false },
+    { "id": "immersiveengineering:high_power_biodiesel", "required": false },
+    { "id": "createdieselgenerators:diesel", "required": false },
+    { "id": "tfmg:diesel", "required": false },
+    { "id": "stellaris:diesel", "required": false },
+    { "id": "tfmg:naphtha", "required": false },
+    { "id": "tfmg:kerosene", "required": false },
+    { "id": "createdieselgenerators:gasoline", "required": false },
+    { "id": "tfmg:gasoline", "required": false },
+    { "id": "tfmg:lpg", "required": false },
+    { "id": "northstar:hydrocarbon", "required": false },
+    { "id": "stellaris:fuel", "required": false },
+    { "id": "mekanism:hydrogen", "required": false },
+    { "id": "createaddition:bioethanol", "required": false },
+    { "id": "createaddition:seed_oil", "required": false }
+  ]
+}
