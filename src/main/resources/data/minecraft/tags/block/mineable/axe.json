@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "createpropulsionsimulated:tilt_adapter",
+    "createpropulsionsimulated:copycat_wing",
+    "createpropulsionsimulated:copycat_wing_8",
+    "createpropulsionsimulated:copycat_wing_12"
+  ]
+}
