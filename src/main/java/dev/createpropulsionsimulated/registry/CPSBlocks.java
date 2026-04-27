@@ -39,19 +39,25 @@ public final class CPSBlocks {
             () -> new CopycatWingBlock(BlockBehaviour.Properties.of()
                     .strength(1.5f, 2.0f)
                     .sound(SoundType.COPPER)
-                    .noOcclusion(), 4, () -> CPSItems.COPYCAT_WING.get()));
+                    .noOcclusion()
+                    .requiresCorrectToolForDrops(), 
+                    4, () -> CPSItems.COPYCAT_WING.get()));
 
     public static final DeferredBlock<CopycatWingBlock> COPYCAT_WING_8 = REGISTER.register("copycat_wing_8",
             () -> new CopycatWingBlock(BlockBehaviour.Properties.of()
                     .strength(1.5f, 2.0f)
                     .sound(SoundType.COPPER)
-                    .noOcclusion(), 8, () -> CPSItems.COPYCAT_WING.get()));
+                    .noOcclusion()
+                    .requiresCorrectToolForDrops(), 
+                    8, () -> CPSItems.COPYCAT_WING.get()));
 
     public static final DeferredBlock<CopycatWingBlock> COPYCAT_WING_12 = REGISTER.register("copycat_wing_12",
             () -> new CopycatWingBlock(BlockBehaviour.Properties.of()
                     .strength(1.5f, 2.0f)
                     .sound(SoundType.COPPER)
-                    .noOcclusion(), 12, () -> CPSItems.COPYCAT_WING.get()));
+                    .noOcclusion()
+                    .requiresCorrectToolForDrops(), 
+                    12, () -> CPSItems.COPYCAT_WING.get()));
 
     public static final DeferredBlock<TiltAdapterBlock> TILT_ADAPTER = REGISTER.register("tilt_adapter",
             () -> new TiltAdapterBlock(BlockBehaviour.Properties.of()

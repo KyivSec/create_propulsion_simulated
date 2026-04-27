@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-04-27T18:53:30.913Z" hostname="DESKTOP-7D6HKM6" time="0.037">
+<testsuite name="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-04-27T20:00:00.279Z" hostname="DESKTOP-7D6HKM6" time="0.054">
   <properties/>
-  <testcase name="centeredThrusterProducesNoTorque()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.018"/>
-  <testcase name="symmetricMultipleThrustersCancelTorqueAndSumForce()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.001"/>
-  <testcase name="offCenterThrusterProducesTorque()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.001"/>
+  <testcase name="centeredThrusterProducesNoTorque()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.027"/>
+  <testcase name="symmetricMultipleThrustersCancelTorqueAndSumForce()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.002"/>
+  <testcase name="offCenterThrusterProducesTorque()" classname="dev.createpropulsionsimulated.content.thruster.ThrusterTorqueMathTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
