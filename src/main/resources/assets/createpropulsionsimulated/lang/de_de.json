@@ -28,6 +28,7 @@
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle": "Partikel",
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle.plasma": "Plasma",
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle.plume": "Schweif",
+  "createpropulsionsimulated.gui.goggles.creative_thruster.particle.ion": "Ionen",
   "createpropulsionsimulated.gui.goggles.creative_thruster.particle.none": "Keine",
   "createpropulsionsimulated.gui.goggles.thruster.thrust_output": "Schubleistung:",
   "createpropulsionsimulated.gui.goggles.thruster.fluid_container": "Flüssigkeitsbehälter-Info:",
@@ -47,5 +48,8 @@
   "createpropulsionsimulated.copycat_wing.tooltip.summary": "Ein leichter Kopierblock für Konstruktionen. Platziere ihn und wende dann einen weiteren Block darauf an, um dessen Material zu kopieren.",
   "createpropulsionsimulated.copycat_wing_8.tooltip.summary": "Ein breiterer Kopierblock für Konstruktionen. Platziere ihn und wende dann einen weiteren Block darauf an, um dessen Material zu kopieren.",
   "createpropulsionsimulated.copycat_wing_12.tooltip.summary": "Der breiteste Kopierblock für Konstruktionen. Platziere ihn und wende dann einen weiteren Block darauf an, um dessen Material zu kopieren.",
-  "createpropulsionsimulated.turpentine_bucket.tooltip.summary": "Treibstoff für Triebwerke. Halte Shift gedrückt, um die Schub- und Verbrennungsrate anzuzeigen."
+  "createpropulsionsimulated.turpentine_bucket.tooltip.summary": "Treibstoff für Triebwerke. Halte Shift gedrückt, um die Schub- und Verbrennungsrate anzuzeigen.",
+  "block.createpropulsionsimulated.tilt_adapter": "Neigungsadapter",
+  "item.createpropulsionsimulated.tilt_adapter": "Neigungsadapter",
+  "createpropulsionsimulated.tilt_adapter.tooltip.summary": "Ein Gerät, das die Rotationsausgabe abhängig von einem analogen Redstone-Signal neigt."
 }

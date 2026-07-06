@@ -48,5 +48,8 @@
   "createpropulsionsimulated.copycat_wing.tooltip.summary": "用于物理结构的较薄伪装风帆方块。放置后，使用其他方块对准并点击，可更改其材质。",
   "createpropulsionsimulated.copycat_wing_8.tooltip.summary": "用于物理结构的较宽伪装风帆方块。放置后，使用其他方块对准并点击，可更改其材质。",
   "createpropulsionsimulated.copycat_wing_12.tooltip.summary": "用于物理结构的最宽伪装风帆方块。放置后，使用其他方块对准并点击，可更改其材质。",
-  "createpropulsionsimulated.turpentine_bucket.tooltip.summary": "推进器燃料。按住 Shift 可查看推力与燃烧速率概要。"
+  "createpropulsionsimulated.turpentine_bucket.tooltip.summary": "推进器燃料。按住 Shift 可查看推力与燃烧速率概要。",
+  "block.createpropulsionsimulated.tilt_adapter": "倾角适配器",
+  "item.createpropulsionsimulated.tilt_adapter": "倾角适配器",
+  "createpropulsionsimulated.tilt_adapter.tooltip.summary": "一种根据模拟红石信号倾斜旋转输出的装置。"
 }
